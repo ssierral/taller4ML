@@ -5,7 +5,7 @@ Created on Thu Nov 27 15:36:27 2014
 @author: elvert
 """
 
-from numpy import *
+import numpy as np
 from pylab import *
 
 import os, struct
@@ -18,11 +18,11 @@ def read(digits, dataset = "training", path = "."):
     """
 
     if dataset is "training":
-        fname_img = os.path.join(path, 'train-images-idx3-ubyte')
-        fname_lbl = os.path.join(path, 'train-labels-idx1-ubyte')
+        fname_img = os.path.join(path, 'train-images.idx3-ubyte')
+        fname_lbl = os.path.join(path, 'train-labels.idx1-ubyte')
     elif dataset is "testing":
-        fname_img = os.path.join(path, 't10k-images-idx3-ubyte')
-        fname_lbl = os.path.join(path, 't10k-labels-idx1-ubyte')
+        fname_img = os.path.join(path, 't10k-images.idx3-ubyte')
+        fname_lbl = os.path.join(path, 't10k-labels.idx1-ubyte')
     else:
         raise ValueError, "dataset must be 'testing' or 'training'"
 
@@ -44,3 +44,27 @@ def read(digits, dataset = "training", path = "."):
         labels[i] = lbl[ind[i]]
 
     return images, labels
+    
+def sparseAutoencoderCost(theta, visibleSize, hiddenSize,lambdaa, sparsityParam, beta, data):
+
+    W1 = np.reshape(theta[1:hiddenSize*visibleSize], hiddenSize, visibleSize)
+    W2 = np.reshape(theta[hiddenSize*visibleSize+1:2*hiddenSize*visibleSize], visibleSize, hiddenSize)
+    b1 = theta[2*hiddenSize*visibleSize+1:2*hiddenSize*visibleSize+hiddenSize]
+    b2 = theta[2*hiddenSize*visibleSize+hiddenSize+1:]
+    
+    cost = 0
+    W1grad = np.zeros(len(W1))
+    W2grad = np.zeros(len(W2))
+    b1grad = np.zeros(len(b1))
+    b2grad = np.zeros(len(b2))
+    
+    H = np.zeros(hiddenSize);
+    Y = np.zeros(visibleSize);
+   
+
+def sigmoid_derivative(x):
+    return np.exp(x) / ((1+np.exp(x))*(1+np.exp(x)))
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x));
+    
