@@ -23,6 +23,25 @@ def sampleIMAGES():
         patches[:, i] = arrayIMAGES[row:row+patchsize, col:col+patchsize, chosen_image_idx].reshape((1, 64))
     return patches
 
+def sigmoid(x):  
+    return 1 / (1 + np.exp(-x));
+    
+def sparseAutoencoderCost(theta, visibleSize, hiddenSize,lambdaa, sparsityParam, beta, data):
+    W1 = np.reshape(theta[1:hiddenSize*visibleSize], (hiddenSize, visibleSize))
+    W2 = np.reshape(theta[hiddenSize*visibleSize+1:2*hiddenSize*visibleSize],(visibleSize,hiddenSize))
+    b1 = theta[2*hiddenSize*visibleSize+1:2*hiddenSize*visibleSize+hiddenSize]
+    b2 = theta[2*hiddenSize*visibleSize+hiddenSize+1:len(theta)]
+    cost = 0;
+    W1grad = np.zeros(len(W1)) 
+    W2grad = np.zeros(len(W2))
+    b1grad = np.zeros(len(b1)) 
+    b2grad = np.zeros(len(b2)) 
+
+    
+    grad = np.array([W1grad[:],W2grad[:],b1grad[:],b2grad[:]])    
+    yield cost
+    yield grad    
+
 if __name__ == '__main__':
     patches= sampleIMAGES()
     print len(patches)
